@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        registry = "davelara089/pipelinedocker"
+        registry = "davelara089/pipelinedocker:tag"
         registryCredential = '5e476a4f-7c6f-4bff-9f70-4a0a9440a4e9'
         dockerImage = ''
     }
