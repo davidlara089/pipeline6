@@ -24,34 +24,17 @@ pipeline {
             }
         }
 
-        stage('Run') {
+   stage('Test') {
             steps {
                 script {
-                    // Verifica si el archivo HolaMundo.class fue generado
-                    if (fileExists('holamundo.class')) {
-                        echo 'Running HolaMundo'
-                        // Ejecuta el programa Java compilado
-                        sh 'java holamundo'
+                    // Search for the method showInConsole in Programa.java
+                    def result = sh(script: 'grep -q "mostrarEnConsola()" holamundo.java', returnStatus: true)
+                    if (result != 0) {
+                        error('Method mostrarEnConsola() not found in holamundo.java')
                     } else {
-                        error 'File holamundo.class not found'
+                        echo 'Method mostrarEnConsola() found in holamundo.java'
                     }
                 }
             }
         }
     }
-
-    post {
-        failure {
-            script {
-                echo 'Pipeline failed.'
-                currentBuild.result = 'FAILURE'
-            }
-        }
-        success {
-            script {
-                echo 'Pipeline succeeded.'
-                currentBuild.result = 'SUCCESS'
-            }
-        }
-    }
-}
