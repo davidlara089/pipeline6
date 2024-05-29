@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clona el repositorio desde GitHub
-                git branch:"main", url: 'https://github.com/davidlara089/pipeline6.git'
+                git branch: "main", url: 'https://github.com/davidlara089/pipeline6.git'
             }
         }
 
@@ -24,7 +24,7 @@ pipeline {
             }
         }
 
-   stage('Test') {
+        stage('Test') {
             steps {
                 script {
                     // Search for the method showInConsole in Programa.java
@@ -34,6 +34,16 @@ pipeline {
                     } else {
                         echo 'Method mostrarEnConsola() found in holamundo.java'
                     }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def dockerImage = docker.build("davelara089/pipelinedocker:${env.BUILD_NUMBER}")
+                    dockerImage.push()
+                    dockerImage.push('latest')
                 }
             }
         }
