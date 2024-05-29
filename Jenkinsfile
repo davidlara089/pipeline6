@@ -10,24 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clona el repositorio desde GitHub
-                git branch: 'main', url: 'https://github.com/davidlara089/pipeline6.git'
-            }
-        }
-
-        stage('Sonarqube Analysis') {
-            environment {
-                SCANNER_HOME = tool 'sonarqube'  // sonar-scanner is the name of the tool in the manage jenkins> tool configuration
-            }
-            steps {
-                withSonarQubeEnv(installationName: 'sonarqube') {  // installationName is the name of sonar installation in manage jenkins>configure system
-                    sh "${SCANNER_HOME}/bin/sonar-scanner \
-                        -Dsonar.projectKey=node-api-testing \
-                        -Dsonar.token=sqp_4239b0abadae0ed7a4712e4eac5a8e03b94e1762 \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://localhost:9000 \
-                        -Dsonar.inclusions=holamundo.java \
-                        -Dsonar.test.inclusions=holamundo.java"
-                }
+                git branch: 'main', url: 'https://github.com/davidlara089/pipeline6.git', credentialsId: 'your-git-credentials-id'
             }
         }
 
