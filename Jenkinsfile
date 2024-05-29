@@ -6,6 +6,13 @@ pipeline {
     }
     agent any  
     stages {
+        stage('Install Docker') {
+            steps {
+                sh 'apt-get update'
+                sh 'apt-get -y install docker.io'
+            }
+        }
+        
         stage('Checkout') {
             steps {
                 // Clona el repositorio desde GitHub
