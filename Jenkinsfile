@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        registry = "arramsyah/docker-rest-api-app"
+        registry = "davelara089/pipelinedocker"
         registryCredential = 'cf0e37c1-bb1f-4cee-a617-561868f13486'
         dockerImage = ''
     }
@@ -19,7 +19,7 @@ pipeline {
                 SCANNER_HOME = tool 'sonarqube'  // sonar-scanner is the name of the tool in the manage jenkins> tool configuration
             }
             steps {
-                withSonarQubeEnv(installationName: 'sonarqube') {  //installationName is the name of sonar installation in manage jenkins>configure system
+                withSonarQubeEnv(installationName: 'sonarqube') {  // installationName is the name of sonar installation in manage jenkins>configure system
                     sh "${SCANNER_HOME}/bin/sonar-scanner \
                         -Dsonar.projectKey=node-api-testing \
                         -Dsonar.token=sqp_4239b0abadae0ed7a4712e4eac5a8e03b94e1762 \
@@ -49,7 +49,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Search for the method mostrarEnConsola in holamundo.java
+                    // Busca el método mostrarEnConsola en holamundo.java
                     def result = sh(script: 'grep -q "mostrarEnConsola()" holamundo.java', returnStatus: true)
                     if (result != 0) {
                         error('Method mostrarEnConsola() not found in holamundo.java')
@@ -63,7 +63,7 @@ pipeline {
         stage('Building Image') {
             steps {
                 script {
-                    dockerImage = docker.build davelara089/pipelinedocker:tag + ":$BUILD_NUMBER"
+                    dockerImage = docker.build("${registry}:${env.BUILD_NUMBER}")
                 }
             }
         }
@@ -71,7 +71,7 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                    docker.withRegistry('', 5e476a4f-7c6f-4bff-9f70-4a0a9440a4e9) {
+                    docker.withRegistry('', registryCredential) {
                         dockerImage.push()
                     }
                 }
