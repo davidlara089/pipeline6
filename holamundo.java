@@ -3,3 +3,4 @@ public class holamundo {
         System.out.println("hola mundo");
     }
 }
+// mostrarEnConsola()
