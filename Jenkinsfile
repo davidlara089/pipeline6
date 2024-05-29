@@ -41,7 +41,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', '5e476a4f-7c6f-4bff-9f70-4a0a9440a4e9') {
+                    docker.withRegistry('https://hub.docker.com/repository/docker/davelara089/pipelinedocker/general', '5e476a4f-7c6f-4bff-9f70-4a0a9440a4e9') {
                         def dockerImage = docker.build("davelara089/pipelinedocker:${env.BUILD_NUMBER}")
                         dockerImage.push()
                         dockerImage.push('latest')
