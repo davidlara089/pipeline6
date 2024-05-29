@@ -4,56 +4,54 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/davidlara089/pipeline6.git'
+                // Clona el repositorio desde GitHub
+                git branch:"main", url: 'https://github.com/davidlara089/pipeline6.git'
             }
         }
 
-        stage('Compile Java Code') {
-            steps {
-                echo 'Starting Java code compilation'
-                sh 'which javac'
-                sh 'javac holamundo.java'
-                echo 'Java code compilation finished'
-            }
-        }
-
-        stage('Run Python Code') {
-            steps {
-                echo 'Running Python code'
-                sh 'which python3'
-                sh 'python3 Programa.py'
-            }
-        }
-
-        stage('Test') {
+        stage('Compile') {
             steps {
                 script {
-                    def result = sh(script: 'grep -q "showInConsole()" holamundo.java', returnStatus: true)
-                    if (result != 0) {
-                        error('Method showInConsole() not found in holamundo.java')
+                    // Verifica si el archivo HolaMundo.java existe
+                    if (fileExists('holamundo.java')) {
+                        echo 'Compiling HolaMundo.java'
+                        // Compila el archivo Java
+                        sh 'javac holamundo.java'
                     } else {
-                        echo 'Method showInConsole() found in holamundo.java'
+                        error 'File HolaMundo.java not found'
                     }
                 }
             }
         }
 
-        stage('Run Java Code') {
+        stage('Run') {
             steps {
-                echo 'Running Java program'
-                sh 'java holamundo'
+                script {
+                    // Verifica si el archivo HolaMundo.class fue generado
+                    if (fileExists('holamundo.class')) {
+                        echo 'Running HolaMundo'
+                        // Ejecuta el programa Java compilado
+                        sh 'java holamundo'
+                    } else {
+                        error 'File holamundo.class not found'
+                    }
+                }
             }
         }
     }
 
     post {
         failure {
-            echo 'Pipeline failed.'
-            currentBuild.result = 'FAILURE'
+            script {
+                echo 'Pipeline failed.'
+                currentBuild.result = 'FAILURE'
+            }
         }
         success {
-            echo 'Pipeline succeeded.'
-            currentBuild.result = 'SUCCESS'
+            script {
+                echo 'Pipeline succeeded.'
+                currentBuild.result = 'SUCCESS'
+            }
         }
     }
 }
