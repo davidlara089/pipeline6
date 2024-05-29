@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clona el repositorio desde GitHub
-                git branch: 'main', url: 'https://github.com/davidlara089/pipeline6.git', credentialsId: 'your-git-credentials-id'
+                git branch: 'main', url: 'https://github.com/davidlara089/pipeline6.git'
             }
         }
 
@@ -39,6 +39,15 @@ pipeline {
                     } else {
                         echo 'Method mostrarEnConsola() found in holamundo.java'
                     }
+                }
+            }
+        }
+
+        stage('Verify Docker') {
+            steps {
+                script {
+                    // Verifica si Docker está disponible
+                    sh 'docker --version'
                 }
             }
         }
