@@ -28,12 +28,12 @@ pipeline {
             steps {
                 script {
                     // Verifica si el archivo HolaMundo.class fue generado
-                    if (fileExists('HolaMundo.class')) {
+                    if (fileExists('holamundo.class')) {
                         echo 'Running HolaMundo'
                         // Ejecuta el programa Java compilado
-                        sh 'java HolaMundo'
+                        sh 'java holamundo'
                     } else {
-                        error 'File HolaMundo.class not found'
+                        error 'File holamundo.class not found'
                     }
                 }
             }
