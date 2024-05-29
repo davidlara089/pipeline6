@@ -1,50 +1,42 @@
 pipeline {
     agent any
-    environment {
-        appName = "variable"
-    }
-    stages {
-        stage('Paso 1 lectura de parametros') {
-            steps {
-                script {
-                    sh "echo 'hola mundo desde GIT'"
-                    sh "pwd"
-                    sh "ls -ltr"
-                }
-            }
-        }
-        stage('paso 2 - Compilacion de codigo') {
-            steps {
-                script {
-                    sh "echo 'COMPILANDO CODIGO'"
-                    sh 'pwd'
-                    sh 'ls -ltr'
-                    sh 'javac holamundo.java'
-                    sh 'ls -ltr'
-                    sh 'sleep 5'
-                    sh 'jar -cf holamundo.jar HolaMundo.class'
-                    sh 'ls -ltr'
-                    sh 'java -jar holamundo.jar'
-                    sh 'ls -ltr'
-                    sh 'java -jar holamundo.jar'
-                    sh "echo 'compilacion exitosa'"
-                    sh 'cp holamundo.jar /tmp/'
-                }
-            }
-        }
-    }
 
-    post {
-        always {
-            sh "echo 'Siempre se ejecuta sin importar si fue fallido o no'"
-            sh 'ls -ltr'
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clona el repositorio desde GitHub
+                git url: 'https://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@github.com/davidlara089/pipeline6.git'
+            }
         }
-        success {
-            echo 'Pipeline completed successfully!'
-            sh "ls -ltr"
+
+        stage('Compile') {
+            steps {
+                script {
+                    // Verifica si el archivo HolaMundo.java existe
+                    if (fileExists('holamundo.java')) {
+                        echo 'Compiling HolaMundo.java'
+                        // Compila el archivo Java
+                        sh 'javac holamundo.java'
+                    } else {
+                        error 'File HolaMundo.java not found'
+                    }
+                }
+            }
         }
-        failure {
-            echo 'Pipeline failed!'
+
+        stage('Run') {
+            steps {
+                script {
+                    // Verifica si el archivo HolaMundo.class fue generado
+                    if (fileExists('HolaMundo.class')) {
+                        echo 'Running HolaMundo'
+                        // Ejecuta el programa Java compilado
+                        sh 'java HolaMundo'
+                    } else {
+                        error 'File HolaMundo.class not found'
+                    }
+                }
+            }
         }
     }
 }
