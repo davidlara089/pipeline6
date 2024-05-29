@@ -41,7 +41,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def dockerImage = docker.build("tuusuario/turepositorio:${env.BUILD_NUMBER}")
+                    def dockerImage = docker.build("davelara089/pipelinedocker:${env.BUILD_NUMBER}")
                     dockerImage.push()
                     dockerImage.push('latest')
                 }
