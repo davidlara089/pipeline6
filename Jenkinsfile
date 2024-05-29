@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Integration') {
             steps {
-                git branch: 'main', url: 'https://github.com/davidlara089/holamundo.git'
+                git branch: 'main', url: 'https://github.com/davidlara089/pipeline6.git/holamundo.java'
             }
         }
 
