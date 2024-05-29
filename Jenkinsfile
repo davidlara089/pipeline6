@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PATH = "/usr/local/bin:$PATH" // Agrega Docker al PATH de Jenkins
+        PATH = "/usr/local/bin:/usr/bin:/bin:$PATH" // Agrega la ubicación de Docker al PATH de Jenkins
     }
 
     stages {
