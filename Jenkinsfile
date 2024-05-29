@@ -1,55 +1,50 @@
 pipeline {
     agent any
-
+    environment {
+        appName = "variable"
+    }
     stages {
-        stage('Integration') {
-            steps {
-                git branch: 'main', url: 'https://github.com/davidlara089/pipeline6.git/holamundo.java'
-            }
-        }
-
-        stage('Build') {
+        stage('Paso 1 lectura de parametros') {
             steps {
                 script {
-                    docker.image('python:3.8-slim').inside {
-                        sh 'python --version'
-                    }
+                    sh "echo 'hola mundo desde GIT'"
+                    sh "pwd"
+                    sh "ls -ltr"
                 }
             }
         }
-
-        stage('Test') {
+        stage('paso 2 - Compilacion de codigo') {
             steps {
                 script {
-                    docker.image('python:3.8-slim').inside {
-                        sh 'pip install unittest'
-                        sh 'python -m unittest discover -s .'
-                    }
-                }
-            }
-        }
-
-        stage('Deploy') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
-            steps {
-                script {
-                    def imageName = 'davelara089/holamundo:latest'
-                    docker.build(imageName)
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials-id') {
-                        docker.image(imageName).push()
-                    }
+                    sh "echo 'COMPILANDO CODIGO'"
+                    sh 'pwd'
+                    sh 'ls -ltr'
+                    sh 'javac holamundo.java'
+                    sh 'ls -ltr'
+                    sh 'sleep 5'
+                    sh 'jar -cf holamundo.jar HolaMundo.class'
+                    sh 'ls -ltr'
+                    sh 'java -jar holamundo.jar'
+                    sh 'ls -ltr'
+                    sh 'java -jar holamundo.jar'
+                    sh "echo 'compilacion exitosa'"
+                    sh 'cp holamundo.jar /tmp/'
                 }
             }
         }
     }
 
     post {
+        always {
+            sh "echo 'Siempre se ejecuta sin importar si fue fallido o no'"
+            sh 'ls -ltr'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+            sh "ls -ltr"
+        }
         failure {
-            mail to: 'laradave374@gmail.com',
-                 subject: "Pipeline falló: ${currentBuild.fullDisplayName}",
-                 body: "Algo salió mal en la construcción del proyecto ${env.JOB_NAME} #${env.BUILD_NUMBER}\nRevisar logs en ${env.BUILD_URL}"
+            echo 'Pipeline failed!'
         }
     }
 }
