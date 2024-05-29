@@ -1,11 +1,7 @@
-# Usamos una imagen base de alpine, que es una distribución de Linux ligera
-FROM alpine:latest
+# syntax=docker/dockerfile:1
 
-# Etiqueta para indicar quién es el mantenedor del Dockerfile
-LABEL maintainer="davelara089 <laradave374@gmail.com>"
-
-# Ejecutamos actualización de paquetes y luego instalamos un programa simple de ejemplo
-RUN apk update && apk add --no-cache mi_programa
-
-# Indicamos qué comando ejecutar cuando el contenedor se inicie
-CMD ["Jenkinsfile"]
+FROM nginx
+WORKDIR /jenkins-deploy/index.html
+COPY index.html /usr/share/nginx/html
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
