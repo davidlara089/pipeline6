@@ -8,48 +8,52 @@ pipeline {
             }
         }
 
-        stage('Compile') {
+        stage('Compile Java Code') {
+            steps {
+                echo 'Starting Java code compilation'
+                sh 'which javac'
+                sh 'javac holamundo.java'
+                echo 'Java code compilation finished'
+            }
+        }
+
+        stage('Run Python Code') {
+            steps {
+                echo 'Running Python code'
+                sh 'which python3'
+                sh 'python3 Programa.py'
+            }
+        }
+
+        stage('Test') {
             steps {
                 script {
-                    if (fileExists('holamundo.java')) {
-                        echo 'Compiling HolaMundo.java'
-                        sh 'javac holamundo.java'
+                    def result = sh(script: 'grep -q "showInConsole()" holamundo.java', returnStatus: true)
+                    if (result != 0) {
+                        error('Method showInConsole() not found in holamundo.java')
                     } else {
-                        error 'File HolaMundo.java not found'
+                        echo 'Method showInConsole() found in holamundo.java'
                     }
                 }
             }
         }
 
-        stage('Run') {
+        stage('Run Java Code') {
             steps {
-                script {
-                    if (fileExists('holamundo.class')) {
-                        echo 'Running HolaMundo'
-                        sh 'java holamundo'
-                    } else {
-                        error 'File holamundo.class not found'
-                    }
-                }
+                echo 'Running Java program'
+                sh 'java holamundo'
             }
         }
     }
 
     post {
-        always {
-            script {
-                currentBuild.result = 'FAILURE'
-            }
+        failure {
+            echo 'Pipeline failed.'
+            currentBuild.result = 'FAILURE'
         }
-
         success {
-            script {
-                currentBuild.result = 'SUCCESS'
-            }
+            echo 'Pipeline succeeded.'
+            currentBuild.result = 'SUCCESS'
         }
     }
 }
-
-
-
-
