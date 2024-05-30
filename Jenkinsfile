@@ -4,21 +4,18 @@ pipeline {
     stages {
         stage('Git Pull') {
             steps {
-                script {
-                    // Obtener los cambios del repositorio git
-                    git 'pull'
-                }
+                // Obtener los cambios del repositorio git
+                git branch: 'main', url: 'https://tu-repo.git'
             }
         }
         stage('Check for index.html') {
             steps {
                 script {
-                    def indexExists = fileExists('index.html')
-                    if (indexExists) {
-                       sh "echo 'El archivo index.html existe.'"
+                    if (fileExists('index.html')) {
+                        echo 'El archivo index.html existe.'
                         // Aquí puedes agregar más acciones si el archivo existe
                     } else {
-                        sh "echo 'El archivo index.html no existe.'"
+                        echo 'El archivo index.html no existe.'
                         // Aquí puedes agregar más acciones si el archivo no existe
                     }
                 }
@@ -26,9 +23,4 @@ pipeline {
         }
         // Aquí puedes agregar más etapas según tus necesidades
     }
-}
-
-def fileExists(String filePath) {
-    def file = new File(filePath)
-    return file.exists()
 }
