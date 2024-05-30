@@ -5,7 +5,6 @@ pipeline {
         registry = "davelara089/pipelinedocker"
         registryCredential = '913e0b95-740c-4c33-b72e-859ca4957541'
         dockerImage = ''
-        SCANNER_HOME = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation' // Verifica el nombre y tipo
     }
 
     stages {
@@ -45,20 +44,6 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonarqube') {  // Asegúrate de que 'sonarqube' es el nombre correcto
-                    sh "${SCANNER_HOME}/bin/sonar-scanner " +
-                        "-Dsonar.projectKey=node-api-testing " +
-                        "-Dsonar.token=sqp_4239b0abadae0ed7a4712e4eac5a8e03b94e1762 " +
-                        "-Dsonar.sources=. " +
-                        "-Dsonar.host.url=http://localhost:9000 " +
-                        "-Dsonar.inclusions=holamundo.java " +
-                        "-Dsonar.test.inclusions=holamundoTest.java"
-                }
-            }
-        }
-
         stage('Building Image') {
             steps {
                 script {
@@ -76,8 +61,5 @@ pipeline {
                 }
             }
         }
-    }
-}
-
     }
 }
