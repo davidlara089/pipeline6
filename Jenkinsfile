@@ -15,10 +15,10 @@ pipeline {
                 script {
                     def indexExists = fileExists('index.html')
                     if (indexExists) {
-                        echo 'El archivo index.html existe.'
+                       sh "echo 'El archivo index.html existe.'"
                         // Aquí puedes agregar más acciones si el archivo existe
                     } else {
-                        echo 'El archivo index.html no existe.'
+                        sh "echo 'El archivo index.html no existe.'"
                         // Aquí puedes agregar más acciones si el archivo no existe
                     }
                 }
