@@ -1,28 +1,22 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Git Pull') {
             steps {
-                git branch: 'main', url: 'https://github.com/davidlara089/pipeline6.git'
-            }
-        }
-        stage('List Files') {
-            steps {
                 script {
-                    // Listar archivos en el directorio para verificar qué archivos existen
-                    sh 'ls -la'
+                    git branch: 'main', url: 'https://github.com/davidlara089/pipeline6.git'
                 }
             }
         }
         stage('Check for index.html') {
             steps {
                 script {
-                    // Verificación de existencia de archivo
-                    if (fileExists('index.html')) {
+                    def exists = fileExists('index.html')
+                    if (exists) {
                         echo 'El archivo index.html existe.'
                     } else {
-                        echo 'El archivo index.html no existe.'
+                        error 'El archivo index.html no existe.'
                     }
                 }
             }
