@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        registry = "arramsyah/docker-rest-api-app"
-        registryCredential = 'cf0e37c1-bb1f-4cee-a617-561868f13486'
+        registry = "davelara089/pipelinedocker"
+        registryCredential = '913e0b95-740c-4c33-b72e-859ca4957541'
         dockerImage = ''
         SCANNER_HOME = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation' // Verifica el nombre y tipo
     }
