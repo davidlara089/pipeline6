@@ -1,0 +1,5 @@
+DAVID LARA
+SAUL MENDOZA
+OMAR PEREZ
+
+Para subir al docker hub hacer un "docker push davelara089/pipelinedocker:alpine"
