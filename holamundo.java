@@ -1,5 +1,11 @@
 public class holamundo {
     public static void main(String[] args) {
-        System.out.println("Hola Mundo");
+        // Llama al método mostrarEnConsola()
+        mostrarEnConsola();
+    }
+
+    // Método para mostrar un mensaje en la consola
+    public static void mostrarEnConsola() {
+        System.out.println("¡Hola, mundo!");
     }
 }
