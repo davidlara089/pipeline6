@@ -2,4 +2,5 @@ DAVID LARA
 SAUL MENDOZA
 OMAR PEREZ
 DEVOPS DEV SECOPS
+8 semestre
 Para subir al docker hub hacer un "docker push davelara089/pipelinedocker:alpine"
