@@ -2,37 +2,42 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Git Pull') {
             steps {
-                // Clona el repositorio desde GitHub
-                git branch:"main", url: 'https://github.com/davidlara089/pipeline6.git'
+                git branch: 'main', url: 'https://github.com/davidlara089/pipeline6.git'
             }
         }
-
-        stage('Compile') {
+        stage('Check for index.html') {
             steps {
                 script {
-                    // Verifica si el archivo HolaMundo.java existe
-                    if (fileExists('holamundo.java')) {
-                        echo 'Compiling HolaMundo.java'
-                        // Compila el archivo Java
-                        sh 'javac holamundo.java'
+                    if (fileExists('index.html')) {
+                        echo 'El archivo index.html existe.'
                     } else {
-                        error 'File HolaMundo.java not found'
+                        echo 'El archivo index.html no existe.'
                     }
                 }
             }
         }
-
-   stage('Test') {
+        stage('Compile') {
             steps {
                 script {
-                    // Search for the method showInConsole in Programa.java
-                    def result = sh(script: 'grep -q "mostrarEnConsola()" holamundo.java', returnStatus: true)
-                    if (result != 0) {
-                        error('Method mostrarEnConsola() not found in holamundo.java')
+                    if (fileExists('holamundo.java')) {
+                        echo 'Compiling holamundo.java'
+                        sh 'javac holamundo.java'
                     } else {
-                        echo 'Method mostrarEnConsola() found in holamundo.java'
+                        error 'holamundo.java no encontrado.'
+                    }
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    try {
+                        sh 'grep -q "mostrarEnConsola()" holamundo.java'
+                        echo 'Método mostrarEnConsola() encontrado en holamundo.java'
+                    } catch (Exception e) {
+                        error 'Método mostrarEnConsola() no encontrado en holamundo.java'
                     }
                 }
             }
