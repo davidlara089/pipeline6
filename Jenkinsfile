@@ -2,25 +2,40 @@ pipeline {
     agent any
 
     stages {
-        stage('Git Pull') {
+        stage('Checkout') {
             steps {
-                // Obtener los cambios del repositorio git
-                git branch: 'main', url: 'https://tu-repo.git'
+                // Clona el repositorio desde GitHub
+                git branch:"main", url: 'https://github.com/davidlara089/pipeline6.git'
             }
         }
-        stage('Check for index.html') {
+
+        stage('Compile') {
             steps {
                 script {
-                    if (fileExists('index.html')) {
-                        echo 'El archivo index.html existe.'
-                        // Aquí puedes agregar más acciones si el archivo existe
+                    // Verifica si el archivo HolaMundo.java existe
+                    if (fileExists('holamundo.java')) {
+                        echo 'Compiling HolaMundo.java'
+                        // Compila el archivo Java
+                        sh 'javac holamundo.java'
                     } else {
-                        echo 'El archivo index.html no existe.'
-                        // Aquí puedes agregar más acciones si el archivo no existe
+                        error 'File HolaMundo.java not found'
                     }
                 }
             }
         }
-        // Aquí puedes agregar más etapas según tus necesidades
+
+   stage('Test') {
+            steps {
+                script {
+                    // Search for the method showInConsole in Programa.java
+                    def result = sh(script: 'grep -q "mostrarEnConsola()" holamundo.java', returnStatus: true)
+                    if (result != 0) {
+                        error('Method mostrarEnConsola() not found in holamundo.java')
+                    } else {
+                        echo 'Method mostrarEnConsola() found in holamundo.java'
+                    }
+                }
+            }
+        }
     }
 }
